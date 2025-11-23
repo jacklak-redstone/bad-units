@@ -66,6 +66,15 @@ class Unit:
     def __repr__(self: Unit) -> str:
         return f"{self.amount:g} {self.__class__.__name__}"
 
+    def __eq__(self: Unit, other: Unit) -> bool:
+        if not isinstance(other, Unit):
+            raise UnitError("Units must be of the same type")
+        return (
+            self.unit_type == other.unit_type
+            and self.amount == other.amount
+            and self.base_units_per == other.base_units_per
+        )
+
 
 class CompoundUnit:
     def __init__(
@@ -149,3 +158,19 @@ class CompoundUnit:
         num_str = f"({self.numerator})" if isinstance(self.numerator, CompoundUnit) else f"{self.numerator}"
         den_str = f"({self.denominator})" if isinstance(self.denominator, CompoundUnit) else f"{self.denominator}"
         return f"{num_str}/{den_str}"
+
+    def __eq__(self: CompoundUnit, other: CompoundUnit) -> bool:
+        if not isinstance(other, CompoundUnit):
+            raise UnitError("Units must be of the same type")
+        return (
+            self.numerator.unit_type == other.numerator.unit_type
+            and self.denominator.unit_type == other.denominator.unit_type
+            and self.numerator.amount == other.numerator.amount
+            and self.denominator.amount == other.denominator.amount
+            and self.numerator.base_units_per == other.numerator.base_units_per
+            and self.denominator.base_units_per == other.denominator.base_units_per
+        )
+
+# Probably self.numerator & self.denominator are not correctly implemented
+# As of my understanding, they can also be CompoundUnit, and not only Unit
+# Which just breaks everything :joy:
