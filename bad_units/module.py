@@ -52,14 +52,30 @@ class Unit:
 
     def __mul__(self: Unit, other: typing.Union[Unit, CompoundUnit]) -> CompoundUnit:
         if isinstance(other, Unit):
-            return CompoundUnit(self * other)
+            # TODO: This is just wrong.
+            # Two plain units -> numerator contains both, denominator is None
+            return CompoundUnit(self, other)
         elif isinstance(other, CompoundUnit):
-            return CompoundUnit(self) * other
+            # TODO: This is just wrong.
+            # Multiply Unit with CompoundUnit
+            return CompoundUnit(
+                numerator=CompoundUnit(self, other.numerator),
+                denominator=other.denominator
+            )
         else:
             raise TypeError("Can only multiply by Unit or CompoundUnit")
 
     def __repr__(self: Unit) -> str:
         return f"{self.amount:g} {self.__class__.__name__}"
+
+    def __eq__(self: Unit, other: object) -> bool:
+        if not isinstance(other, Unit):
+            raise UnitError("Units must be of the same type")
+        return (
+            self.unit_type == other.unit_type
+            and self.amount == other.amount
+            and self.base_units_per == other.base_units_per
+        )
 
 
 class CompoundUnit:
@@ -73,6 +89,9 @@ class CompoundUnit:
 
     def _check_compatibility(self: CompoundUnit, other: CompoundUnit) -> None:
         if not isinstance(other, CompoundUnit):
+            raise TypeError("Can only add/subtract with another CompoundUnit")
+        if not isinstance(self.numerator, Unit) or not isinstance(self.denominator, Unit)\
+                or not isinstance(other.numerator, Unit) or not isinstance(other.denominator, Unit):
             raise TypeError("Can only add/subtract with another CompoundUnit")
         if self.numerator.unit_type != other.numerator.unit_type:
             raise UnitError("Cannot add/subtract: numerators mismatch")
@@ -141,3 +160,16 @@ class CompoundUnit:
         num_str = f"({self.numerator})" if isinstance(self.numerator, CompoundUnit) else f"{self.numerator}"
         den_str = f"({self.denominator})" if isinstance(self.denominator, CompoundUnit) else f"{self.denominator}"
         return f"{num_str}/{den_str}"
+
+    def __eq__(self: CompoundUnit, other: object) -> bool:
+        if not isinstance(other, CompoundUnit):
+            raise UnitError("Units must be of the same type")
+        return (
+            self.numerator == other.numerator
+            and self.denominator == other.denominator
+        )
+
+# TODO:
+# Probably self.numerator & self.denominator are not correctly implemented
+# As of my understanding, they can also be CompoundUnit, and not only Unit
+# Which just breaks everything :joy:
