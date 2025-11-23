@@ -52,9 +52,11 @@ class Unit:
 
     def __mul__(self: Unit, other: typing.Union[Unit, CompoundUnit]) -> CompoundUnit:
         if isinstance(other, Unit):
+            # TODO: This is just wrong.
             # Two plain units -> numerator contains both, denominator is None
             return CompoundUnit(self, other)
         elif isinstance(other, CompoundUnit):
+            # TODO: This is just wrong.
             # Multiply Unit with CompoundUnit
             return CompoundUnit(
                 numerator=CompoundUnit(self, other.numerator),
@@ -167,6 +169,7 @@ class CompoundUnit:
             and self.denominator == other.denominator
         )
 
+# TODO:
 # Probably self.numerator & self.denominator are not correctly implemented
 # As of my understanding, they can also be CompoundUnit, and not only Unit
 # Which just breaks everything :joy:
