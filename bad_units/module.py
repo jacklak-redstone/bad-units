@@ -68,7 +68,7 @@ class Unit:
     def __repr__(self: Unit) -> str:
         return f"{self.amount:g} {self.__class__.__name__}"
 
-    def __eq__(self: Unit, other: Unit) -> bool:
+    def __eq__(self: Unit, other: object) -> bool:
         if not isinstance(other, Unit):
             raise UnitError("Units must be of the same type")
         return (
@@ -161,7 +161,7 @@ class CompoundUnit:
         den_str = f"({self.denominator})" if isinstance(self.denominator, CompoundUnit) else f"{self.denominator}"
         return f"{num_str}/{den_str}"
 
-    def __eq__(self: CompoundUnit, other: CompoundUnit) -> bool:
+    def __eq__(self: CompoundUnit, other: object) -> bool:
         if not isinstance(other, CompoundUnit):
             raise UnitError("Units must be of the same type")
         return (
