@@ -79,6 +79,9 @@ class CompoundUnit:
     def _check_compatibility(self: CompoundUnit, other: CompoundUnit) -> None:
         if not isinstance(other, CompoundUnit):
             raise TypeError("Can only add/subtract with another CompoundUnit")
+        if not isinstance(self.numerator, Unit) or not isinstance(self.denominator, Unit)\
+                or not isinstance(other.numerator, Unit) or not isinstance(other.denominator, Unit):
+            raise TypeError("Can only add/subtract with another CompoundUnit")
         if self.numerator.unit_type != other.numerator.unit_type:
             raise UnitError("Cannot add/subtract: numerators mismatch")
         if self.denominator and other.denominator:
