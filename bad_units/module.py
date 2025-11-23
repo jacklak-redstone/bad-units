@@ -163,12 +163,8 @@ class CompoundUnit:
         if not isinstance(other, CompoundUnit):
             raise UnitError("Units must be of the same type")
         return (
-            self.numerator.unit_type == other.numerator.unit_type
-            and self.denominator.unit_type == other.denominator.unit_type
-            and self.numerator.amount == other.numerator.amount
-            and self.denominator.amount == other.denominator.amount
-            and self.numerator.base_units_per == other.numerator.base_units_per
-            and self.denominator.base_units_per == other.denominator.base_units_per
+            self.numerator == other.numerator
+            and self.denominator == other.denominator
         )
 
 # Probably self.numerator & self.denominator are not correctly implemented
