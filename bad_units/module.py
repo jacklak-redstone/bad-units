@@ -52,7 +52,8 @@ class Unit:
 
     def __mul__(self: Unit, other: typing.Union[Unit, CompoundUnit]) -> CompoundUnit:
         if isinstance(other, Unit):
-            return CompoundUnit(self * other)
+            # Two plain units -> numerator contains both, denominator is None
+            return CompoundUnit(self, other)
         elif isinstance(other, CompoundUnit):
             return CompoundUnit(self) * other
         else:
