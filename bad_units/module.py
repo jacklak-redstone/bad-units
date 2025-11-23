@@ -55,7 +55,11 @@ class Unit:
             # Two plain units -> numerator contains both, denominator is None
             return CompoundUnit(self, other)
         elif isinstance(other, CompoundUnit):
-            return CompoundUnit(self) * other
+            # Multiply Unit with CompoundUnit
+            return CompoundUnit(
+                numerator=CompoundUnit(self, other.numerator),
+                denominator=other.denominator
+            )
         else:
             raise TypeError("Can only multiply by Unit or CompoundUnit")
 
