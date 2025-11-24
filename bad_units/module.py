@@ -73,8 +73,7 @@ class Unit:
             raise UnitError("Units must be of the same type")
         return (
             self.unit_type == other.unit_type
-            and self.amount == other.amount
-            and self.base_units_per == other.base_units_per
+            and self.amount * self.base_units_per == other.amount * other.base_units_per
         )
 
 
