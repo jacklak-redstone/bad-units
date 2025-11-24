@@ -22,6 +22,7 @@ You can add and subtract units:
 print(Meter(5)+Centimeter(3)-Millimeter(42))
 ```
 # Compound Units  
+## DO NOT USE FOR NOW
 Bad Units also supports compound units. That means you can divide one unit by another, multiply them together, and create all kinds of messy physics-like expressions.
 
 Example:
