@@ -1,2 +1,5 @@
 dist/
 bad_units.egg-info/
+.venv
+.idea
+*__pycache__
