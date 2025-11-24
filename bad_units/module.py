@@ -50,16 +50,18 @@ class Unit:
     def __truediv__(self: Unit, other: Unit) -> CompoundUnit:
         return CompoundUnit(self, other)
 
-    def __mul__(self: Unit, other: typing.Union[Unit, CompoundUnit]) -> CompoundUnit:
-        if isinstance(other, Unit):
+    def __mul__(self: Unit, other: object) -> typing.Union[Unit, CompoundUnit]:
+        if isinstance(other, float) or isinstance(other, int):
+            return Unit(self.amount * other)
+        elif not isinstance(other, Unit) and not isinstance(other, CompoundUnit):
+            raise TypeError("Can multiply subtract Unit or CompoundUnit")
+        elif isinstance(other, Unit):
             # TODO: This is just wrong.
             # Two plain units -> numerator contains both, denominator is None
             return CompoundUnit(self, other)
         elif isinstance(other, CompoundUnit):
-            # TODO: This is just wrong.
-            # Multiply Unit with CompoundUnit
             return CompoundUnit(
-                numerator=CompoundUnit(self, other.numerator),
+                numerator=self * other,
                 denominator=other.denominator
             )
         else:
@@ -78,6 +80,8 @@ class Unit:
 
 
 class CompoundUnit:
+    unit_type: str = ''
+
     def __init__(
             self,
             numerator: typing.Union["Unit", "CompoundUnit"],
@@ -85,12 +89,10 @@ class CompoundUnit:
     ) -> None:
         self.numerator: typing.Union["Unit", "CompoundUnit"] = numerator
         self.denominator: typing.Union["Unit", "CompoundUnit", None] = denominator
+        self.unit_type = f'{numerator.unit_type}/{denominator.unit_type}'
 
     def _check_compatibility(self: CompoundUnit, other: CompoundUnit) -> None:
         if not isinstance(other, CompoundUnit):
-            raise TypeError("Can only add/subtract with another CompoundUnit")
-        if not isinstance(self.numerator, Unit) or not isinstance(self.denominator, Unit)\
-                or not isinstance(other.numerator, Unit) or not isinstance(other.denominator, Unit):
             raise TypeError("Can only add/subtract with another CompoundUnit")
         if self.numerator.unit_type != other.numerator.unit_type:
             raise UnitError("Cannot add/subtract: numerators mismatch")
